@@ -1,0 +1,384 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   CVS Design System — Root Variables & Global Styles
+   ============================================================================ */
+
+:root {
+  /* Brand palette — safety-oriented, high-contrast */
+  --cvs-bg-primary: #0a0e1a;
+  --cvs-bg-surface: #111827;
+  --cvs-bg-elevated: #1e293b;
+  --cvs-bg-glass: rgba(17, 24, 39, 0.85);
+
+  --cvs-text-primary: #f1f5f9;
+  --cvs-text-secondary: #94a3b8;
+  --cvs-text-muted: #64748b;
+
+  --cvs-accent-blue: #3b82f6;
+  --cvs-accent-cyan: #22d3ee;
+  --cvs-accent-green: #10b981;
+  --cvs-accent-amber: #f59e0b;
+  --cvs-accent-red: #ef4444;
+  --cvs-accent-purple: #8b5cf6;
+
+  /* Safety status colours */
+  --cvs-safe: #10b981;
+  --cvs-advisory: #f59e0b;
+  --cvs-critical: #ef4444;
+  --cvs-dead-reckoning: #8b5cf6;
+
+  /* Sensor mode indicators */
+  --cvs-gps-locked: #10b981;
+  --cvs-imu-dr: #f59e0b;
+  --cvs-simulation: #3b82f6;
+  --cvs-offline: #64748b;
+
+  /* Glassmorphism */
+  --glass-blur: 16px;
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  /* Shadows */
+  --shadow-glow-green: 0 0 20px rgba(16, 185, 129, 0.3);
+  --shadow-glow-red: 0 0 20px rgba(239, 68, 68, 0.4);
+  --shadow-glow-amber: 0 0 20px rgba(245, 158, 11, 0.3);
+  --shadow-glow-blue: 0 0 20px rgba(59, 130, 246, 0.3);
+
+  /* Typography */
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  /* Spacing */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+}
+
+/* ============================================================================
+   Global Reset & Base Styles
+   ============================================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--cvs-bg-primary);
+  color: var(--cvs-text-primary);
+  line-height: 1.6;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================================
+   Glassmorphism Utilities
+   ============================================================================ */
+
+.glass-card {
+  background: var(--cvs-bg-glass);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+}
+
+.glass-card-sm {
+  background: var(--cvs-bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+}
+
+/* ============================================================================
+   Sensor Status Indicator Animations
+   ============================================================================ */
+
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 4px var(--cvs-safe); }
+  50% { box-shadow: 0 0 16px var(--cvs-safe), 0 0 32px rgba(16, 185, 129, 0.2); }
+}
+
+@keyframes pulse-amber {
+  0%, 100% { box-shadow: 0 0 4px var(--cvs-advisory); }
+  50% { box-shadow: 0 0 16px var(--cvs-advisory), 0 0 32px rgba(245, 158, 11, 0.2); }
+}
+
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 4px var(--cvs-critical); }
+  50% { box-shadow: 0 0 20px var(--cvs-critical), 0 0 40px rgba(239, 68, 68, 0.3); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out both;
+}
+
+.animate-pulse-green {
+  animation: pulse-green 2s ease-in-out infinite;
+}
+
+.animate-pulse-amber {
+  animation: pulse-amber 1.5s ease-in-out infinite;
+}
+
+.animate-pulse-red {
+  animation: pulse-red 1s ease-in-out infinite;
+}
+
+/* ============================================================================
+   Button System
+   ============================================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.025em;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--cvs-accent-blue), var(--cvs-accent-cyan));
+  color: white;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 6px 25px rgba(59, 130, 246, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--cvs-accent-red), #dc2626);
+  color: white;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--cvs-accent-green), #059669);
+  color: white;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--cvs-text-secondary);
+  border: 1px solid var(--glass-border);
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--cvs-text-primary);
+}
+
+/* ============================================================================
+   Speed HUD Gauges
+   ============================================================================ */
+
+.speed-gauge {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 135deg,
+    var(--cvs-bg-elevated) 0deg,
+    var(--cvs-bg-elevated) 270deg,
+    transparent 270deg
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.speed-gauge-inner {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: var(--cvs-bg-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.speed-value {
+  font-family: var(--font-mono);
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.speed-unit {
+  font-size: 0.7rem;
+  color: var(--cvs-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+/* ============================================================================
+   Sensor Mode Badge
+   ============================================================================ */
+
+.sensor-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sensor-badge .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.sensor-badge--gps {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--cvs-gps-locked);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.sensor-badge--gps .dot { background: var(--cvs-gps-locked); animation: pulse-green 2s infinite; }
+
+.sensor-badge--dr {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--cvs-imu-dr);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.sensor-badge--dr .dot { background: var(--cvs-imu-dr); animation: pulse-amber 1.5s infinite; }
+
+.sensor-badge--sim {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--cvs-simulation);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+.sensor-badge--sim .dot { background: var(--cvs-simulation); animation: pulse-green 3s infinite; }
+
+.sensor-badge--offline {
+  background: rgba(100, 116, 139, 0.15);
+  color: var(--cvs-offline);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+}
+.sensor-badge--offline .dot { background: var(--cvs-offline); }
+
+/* ============================================================================
+   Mobile Responsive Layout
+   ============================================================================ */
+
+@media (max-width: 640px) {
+  .speed-gauge {
+    width: 120px;
+    height: 120px;
+  }
+  .speed-gauge-inner {
+    width: 100px;
+    height: 100px;
+  }
+  .speed-value {
+    font-size: 2rem;
+  }
+}
+
+/* ============================================================================
+   Scrollbar Styling
+   ============================================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================================================
+   Leaflet Map Overrides (dark theme)
+   ============================================================================ */
+
+.leaflet-container {
+  background: var(--cvs-bg-primary) !important;
+  border-radius: var(--radius-lg);
+}
+
+.leaflet-control-zoom a {
+  background: var(--cvs-bg-elevated) !important;
+  color: var(--cvs-text-primary) !important;
+  border-color: var(--glass-border) !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--cvs-bg-surface) !important;
+  color: var(--cvs-text-primary) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+.leaflet-popup-tip {
+  background: var(--cvs-bg-surface) !important;
+}
