@@ -349,6 +349,11 @@ async def process_telemetry_heartbeat(
     response_model=ChainVerifyResponse,
     tags=["Cryptographic Verification"],
 )
+@app.get(
+    "/verify/{vehicle_registration}",
+    response_model=ChainVerifyResponse,
+    include_in_schema=False,
+)
 def verify_vehicle_hash_chain(
     vehicle_registration: str, db: Session = Depends(get_db)
 ):

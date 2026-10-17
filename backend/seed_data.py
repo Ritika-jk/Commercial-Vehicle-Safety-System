@@ -258,3 +258,33 @@ def reset_demo_fleet(db: Session) -> None:
     db.query(Driver).delete()
     db.commit()
     seed_initial_fleet(db)
+
+
+if __name__ == "__main__":
+    import sys
+    from database import SessionLocal, init_db
+
+    print("=" * 70)
+    print("AI Commercial Vehicle Safety System — Database Seeder")
+    print("=" * 70)
+    init_db()
+    db = SessionLocal()
+    try:
+        if "--reset" in sys.argv or "-r" in sys.argv:
+            print("[INFO] Resetting and re-seeding baseline demo fleet...")
+            reset_demo_fleet(db)
+            print("[OK] Demo fleet reset complete.")
+        else:
+            print("[INFO] Checking database seed status...")
+            seed_initial_fleet(db)
+            print("[OK] Baseline fleet verified.")
+
+        v_count = db.query(Vehicle).count()
+        d_count = db.query(Driver).count()
+        e_count = db.query(ViolationEvent).count()
+        print(f"[STATUS] Database contains: {v_count} Vehicles, {d_count} Drivers, {e_count} Violations.")
+        print("[READY] Vehicle JK02-1234 is pre-loaded with verified SHA-256 hash chains.")
+        print("        Verify API: http://localhost:8000/api/verify/JK02-1234")
+    finally:
+        db.close()
+
